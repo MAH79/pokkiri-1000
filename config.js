@@ -7,7 +7,7 @@ export const site = {
   description:
     "楽天市場の「1000円ポッキリ・送料無料」だけを毎日自動で集めたカタログ。お買い物マラソンの買い回り店舗数稼ぎに。",
   // 公開URL(Cloudflare Pages / GitHub Pages のURLに変更)
-  url: "https://example.pages.dev",
+  url: "https://mah79.github.io/pokkiri-1000",
   // 1カテゴリあたり取得する商品数(30の倍数、最大90推奨)
   itemsPerCategory: 60,
   // トップページに載せる各カテゴリの件数
