@@ -58,7 +58,7 @@ const nav = (active) => `
     .join("")}
 </nav>`;
 
-const page = ({ title, desc, active, body, path }) => `<!doctype html>
+const page = ({ title, desc, active, body, path, lead }) => `<!doctype html>
 <html lang="ja">
 <head>
 <meta charset="utf-8">
@@ -93,6 +93,7 @@ ${ticker()}
 </header>
 ${nav(active)}
 <main>
+${lead ? `<p class="intro lead">${esc(lead)}</p>` : ""}
 ${body}
 </main>
 <footer>
@@ -130,6 +131,7 @@ await writeFile(
     active: "index",
     body: topBody,
     path: "index.html",
+    lead: site.lead,
   })
 );
 
@@ -139,6 +141,7 @@ for (const c of categories) {
   const body = `
 <section>
   <div class="sechead"><h2>${c.name}<span class="badge">売れ筋順・${items.length}件</span></h2></div>
+  ${c.intro ? `<p class="intro">${esc(c.intro)}</p>` : ""}
   <div class="grid">${items.map(card).join("")}</div>
 </section>`;
   await writeFile(
