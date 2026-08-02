@@ -53,6 +53,7 @@ const page = ({ title, desc, active, body, path }) => `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-site-verification" content="B9t2SedN67G2VsEoHbd2cUHTi0MuzBYc0bKpJAIYaVk">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${site.url}/${path}">
