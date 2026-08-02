@@ -1,0 +1,12 @@
+{
+  "name": "pokkiri-1000",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "fetch": "node scripts/fetch.js",
+    "build": "node scripts/build.js",
+    "all": "npm run fetch && npm run build"
+  }
+}
