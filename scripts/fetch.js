@@ -1,35 +1,48 @@
-// 楽天商品検索APIから「1000円ポッキリ・送料無料」を取得して data/items.json に保存
+// 楽天商品検索API(2026年新仕様)から「1000円ポッキリ・送料無料」を取得
 import { writeFile, mkdir } from "node:fs/promises";
 import { categories, site } from "../config.js";
 
 const APP_ID = process.env.RAKUTEN_APP_ID;
+const ACCESS_KEY = process.env.RAKUTEN_ACCESS_KEY;
 const AFF_ID = process.env.RAKUTEN_AFFILIATE_ID;
 
-if (!APP_ID || !AFF_ID) {
-  console.error("環境変数 RAKUTEN_APP_ID / RAKUTEN_AFFILIATE_ID を設定してください");
+if (!APP_ID || !ACCESS_KEY || !AFF_ID) {
+  console.error("環境変数 RAKUTEN_APP_ID / RAKUTEN_ACCESS_KEY / RAKUTEN_AFFILIATE_ID を設定してください");
   process.exit(1);
 }
 
+// 新エンドポイント
 const ENDPOINT =
-  "https://app.rakuten.co.jp/services/api/IchibaItem/Search/20220601";
-const PER_PAGE = 30; // APIの上限
+  "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20220601";
+// アプリ登録時のApplication URL(Referer制限対策)
+const REFERER = "https://www.jaio-gadget.com/";
+
+const PER_PAGE = 30;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function fetchPage(genreId, page) {
   const params = new URLSearchParams({
     applicationId: APP_ID,
+    accessKey: ACCESS_KEY,
     affiliateId: AFF_ID,
     format: "json",
     genreId: String(genreId),
     minPrice: "1000",
     maxPrice: "1000",
-    postageFlag: "1", // 送料込みのみ
-    sort: "-reviewCount", // レビュー数順 = 売れ筋
+    postageFlag: "1",
+    sort: "-reviewCount",
     hits: String(PER_PAGE),
     page: String(page),
-    imageFlag: "1", // 画像ありのみ
+    imageFlag: "1",
   });
-  const res = await fetch(`${ENDPOINT}?${params}`);
+  const res = await fetch(`${ENDPOINT}?${params}`, {
+    headers: {
+      Referer: REFERER,
+      Origin: REFERER.replace(/\/$/, ""),
+      accessKey: ACCESS_KEY,
+      "User-Agent": "pokkiri-1000/1.0",
+    },
+  });
   if (!res.ok) throw new Error(`API ${res.status}: ${await res.text()}`);
   return res.json();
 }
@@ -64,11 +77,10 @@ for (const cat of categories) {
       if (p * PER_PAGE >= (json.count ?? 0)) break;
     } catch (e) {
       console.error(`[${cat.name}] page ${p} 失敗:`, e.message);
-      break; // このカテゴリは取れた分だけで続行
+      break;
     }
-    await sleep(1100); // APIレート制限(1req/秒)対策
+    await sleep(1100);
   }
-  // 念のため重複除去
   const seen = new Set();
   result.categories[cat.slug] = items.filter((i) => {
     if (seen.has(i.code)) return false;
@@ -82,7 +94,7 @@ for (const cat of categories) {
 const total = Object.values(result.categories).reduce((n, a) => n + a.length, 0);
 if (total === 0) {
   console.error("商品が1件も取得できませんでした。ビルドを中止します。");
-  process.exit(1); // 空サイトで上書きしない安全弁
+  process.exit(1);
 }
 
 await mkdir("data", { recursive: true });
