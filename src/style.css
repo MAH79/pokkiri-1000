@@ -1,24 +1,26 @@
-/* 1000円ポッキリ市場 — コイン(丸)モチーフ */
+/* 1000円ポッキリ市場 v2 — スーパーの値札POP × セール祭り */
 :root {
-  --crimson: #bf0000;
-  --crimson-dk: #8f0000;
-  --bg: #fff8f0;
-  --card: #ffffff;
-  --ink: #2a211b;
-  --muted: #8a7a6d;
-  --line: #ede0d2;
-  --amber: #e8a000;
-  --radius: 14px;
-  --display: "Zen Maru Gothic", sans-serif;
-  --body: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN",
-    "Noto Sans JP", Meiryo, sans-serif;
+  --crimson: #c50021;
+  --berry: #8e0018;
+  --gold: #ffb800;
+  --gold-dk: #d99400;
+  --ink: #221a15;
+  --muted: #8b7c70;
+  --paper: #ffffff;
+  --cream: #fff4e2;
+  --line: #f0e2d2;
+  --radius: 16px;
+  --display: "Mochiy Pop One", sans-serif;
+  --body: "Zen Kaku Gothic New", -apple-system, BlinkMacSystemFont,
+    "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
 }
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  background: var(--bg);
+  background: var(--paper);
   color: var(--ink);
   font-family: var(--body);
+  font-weight: 500;
   line-height: 1.6;
 }
 img { max-width: 100%; display: block; }
@@ -26,53 +28,83 @@ a { color: inherit; text-decoration: none; }
 
 /* マラソン開催中バナー */
 .marathon {
-  background: var(--crimson);
-  color: #fff;
+  background: var(--gold);
+  color: var(--berry);
   font-family: var(--display);
-  font-weight: 700;
   text-align: center;
   padding: 10px 16px;
   font-size: 0.95rem;
 }
 
-/* ヒーロー:巨大コイン */
+/* 流れるティッカー */
+.ticker {
+  background: var(--ink);
+  color: var(--gold);
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--display);
+  font-size: 0.78rem;
+  padding: 6px 0;
+}
+.ticker .track { display: inline-flex; animation: slide 28s linear infinite; }
+.ticker span { padding-right: 2em; }
+@keyframes slide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ヒーロー:クリムゾン帯 × 値札バースト */
 .hero {
+  background: linear-gradient(150deg, var(--crimson), var(--berry));
+  color: #fff;
   text-align: center;
-  padding: 40px 16px 8px;
+  padding: 40px 16px 46px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  /* 裾のギザギザ(値札の切り取り線) */
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 14px;
+  background: var(--paper);
+  clip-path: polygon(0 100%, 0 40%, 2.5% 100%, 5% 40%, 7.5% 100%, 10% 40%, 12.5% 100%, 15% 40%, 17.5% 100%, 20% 40%, 22.5% 100%, 25% 40%, 27.5% 100%, 30% 40%, 32.5% 100%, 35% 40%, 37.5% 100%, 40% 40%, 42.5% 100%, 45% 40%, 47.5% 100%, 50% 40%, 52.5% 100%, 55% 40%, 57.5% 100%, 60% 40%, 62.5% 100%, 65% 40%, 67.5% 100%, 70% 40%, 72.5% 100%, 75% 40%, 77.5% 100%, 80% 40%, 82.5% 100%, 85% 40%, 87.5% 100%, 90% 40%, 92.5% 100%, 95% 40%, 97.5% 100%, 100% 40%, 100% 100%);
 }
 .brand {
   font-family: var(--display);
-  font-weight: 700;
-  color: var(--crimson);
-  letter-spacing: 0.1em;
-  margin: 0 0 18px;
+  font-size: 1rem;
+  letter-spacing: 0.14em;
+  margin: 0 0 20px;
+  opacity: 0.92;
 }
-.coin {
-  width: 190px;
-  height: 190px;
-  margin: 0 auto;
-  border-radius: 50%;
-  background: radial-gradient(circle at 32% 28%, #ffd76a, var(--amber) 68%);
-  box-shadow: inset 0 0 0 8px rgba(255, 255, 255, 0.35),
-    0 10px 26px rgba(184, 134, 11, 0.35);
-  display: grid;
-  place-content: center;
-  font-family: var(--display);
-  font-weight: 900;
-  font-size: 2.6rem;
-  color: #6b4a00;
+.note {
+  width: min(340px, 82vw);
+  margin: 4px auto 10px;
+  transform: rotate(-4deg);
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
 }
-.coin .yen { font-size: 1.6rem; vertical-align: 0.35em; margin-right: 2px; }
+.note svg { width: 100%; height: auto; display: block; }
+.n-paper { fill: var(--cream); stroke: var(--berry); stroke-width: 3; }
+.n-frame { fill: none; stroke: var(--berry); stroke-width: 1.4; opacity: 0.8; }
+.n-guill { fill: none; stroke: var(--gold-dk); stroke-width: 1; opacity: 0.25; }
+.n-issuer { font-family: var(--display); font-size: 15px; fill: var(--berry); letter-spacing: 0.22em; }
+.n-big { font-family: var(--display); font-size: 46px; fill: var(--berry); }
+.n-yen { font-size: 30px; }
+.n-sub { font-family: var(--body); font-weight: 700; font-size: 10px; fill: var(--gold-dk); letter-spacing: 0.3em; }
+
 .hero h1 {
   font-family: var(--display);
-  font-weight: 900;
-  font-size: clamp(1.5rem, 5vw, 2.3rem);
-  margin: 22px 0 6px;
+  font-weight: 400;
+  font-size: clamp(1.45rem, 5vw, 2.2rem);
+  line-height: 1.45;
+  margin: 18px 0 8px;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.14);
 }
-.hero h1 em { color: var(--crimson); font-style: normal; }
-.hero .sub { color: var(--muted); font-size: 0.9rem; margin: 0; }
+.hero h1 em { color: var(--gold); font-style: normal; }
+.hero .sub { font-size: 0.85rem; margin: 0; opacity: 0.85; }
 
-/* カテゴリナビ(丸ピル) */
+/* カテゴリナビ */
 .catnav {
   position: sticky;
   top: 0;
@@ -80,51 +112,71 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  padding: 14px 16px;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(6px);
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
+.catnav::-webkit-scrollbar { display: none; }
 .catnav a {
   flex: 0 0 auto;
-  font-family: var(--display);
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   padding: 7px 16px;
   border-radius: 999px;
-  border: 1.5px solid var(--line);
-  background: var(--card);
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  box-shadow: 2px 2px 0 var(--ink);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
+.catnav a:hover { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
 .catnav a.on {
   background: var(--crimson);
   border-color: var(--crimson);
   color: #fff;
+  box-shadow: 2px 2px 0 var(--berry);
 }
-.catnav a:focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+.catnav a:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 
 main { max-width: 1080px; margin: 0 auto; padding: 8px 16px 48px; }
 
 .sechead {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  margin: 30px 0 12px;
+  gap: 12px;
+  margin: 34px 0 14px;
 }
 .sechead h2 {
   font-family: var(--display);
-  font-weight: 900;
-  font-size: 1.3rem;
+  font-weight: 400;
+  font-size: 1.25rem;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.sechead .count { color: var(--muted); font-size: 0.9rem; font-weight: 700; }
+.sechead .badge {
+  font-family: var(--body);
+  font-weight: 700;
+  font-size: 0.68rem;
+  color: var(--berry);
+  background: var(--cream);
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  padding: 2px 10px;
+  white-space: nowrap;
+}
 .sechead .more {
-  font-family: var(--display);
   font-weight: 700;
   font-size: 0.85rem;
   color: var(--crimson);
+  white-space: nowrap;
 }
 
-/* カードグリッド:価格表記なし(全品1,000円だから) */
+/* カードグリッド */
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -134,22 +186,58 @@ main { max-width: 1080px; margin: 0 auto; padding: 8px 16px 48px; }
 @media (min-width: 960px) { .grid { grid-template-columns: repeat(4, 1fr); } }
 
 .card {
-  background: var(--card);
-  border: 1px solid var(--line);
+  background: var(--paper);
+  border: 2px solid var(--ink);
   border-radius: var(--radius);
   overflow: hidden;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: transform 0.14s ease, box-shadow 0.14s ease;
 }
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(42, 33, 27, 0.1);
-}
+.card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
 .card a { display: flex; flex-direction: column; height: 100%; padding-bottom: 12px; }
-.thumb { aspect-ratio: 1; background: #fff; }
+.thumb { aspect-ratio: 1; background: #fff; position: relative; }
 .thumb img { width: 100%; height: 100%; object-fit: contain; }
+
+/* 値札タグ */
+.tag {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  font-family: var(--display);
+  font-size: 0.72rem;
+  color: var(--berry);
+  background: var(--gold);
+  border-radius: 6px;
+  padding: 3px 8px;
+  transform: rotate(5deg);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
+}
+
+/* 売れ筋TOP3バッジ */
+.rank {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  font-family: var(--display);
+  font-size: 1rem;
+  color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.22);
+}
+.rank i { font-style: normal; font-size: 0.55rem; }
+.rank.r1 { background: linear-gradient(160deg, #ffd35c, var(--gold-dk)); color: var(--berry); }
+.rank.r2 { background: linear-gradient(160deg, #d9dde3, #9aa3ad); color: #3c434b; }
+.rank.r3 { background: linear-gradient(160deg, #e3a06b, #b0713d); }
+
 .name {
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: 700;
   margin: 10px 12px 4px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -165,11 +253,11 @@ main { max-width: 1080px; margin: 0 auto; padding: 8px 16px 48px; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.review { font-size: 0.75rem; margin: 0 12px 8px; }
-.stars { color: var(--amber); letter-spacing: 1px; }
+.review { font-size: 0.75rem; margin: 0 12px 10px; }
+.stars { color: var(--gold-dk); letter-spacing: 1px; }
 .rc { color: var(--muted); }
 .pt {
-  background: var(--amber);
+  background: var(--crimson);
   color: #fff;
   border-radius: 999px;
   font-weight: 700;
@@ -180,26 +268,29 @@ main { max-width: 1080px; margin: 0 auto; padding: 8px 16px 48px; }
 .cta {
   margin: auto 12px 0;
   text-align: center;
-  font-family: var(--display);
   font-weight: 700;
   font-size: 0.85rem;
   color: #fff;
   background: var(--crimson);
   border-radius: 999px;
-  padding: 8px 0;
+  padding: 9px 0;
+  box-shadow: inset 0 -3px 0 var(--berry);
 }
-.card a:hover .cta { background: var(--crimson-dk); }
-.card a:focus-visible { outline: 3px solid var(--amber); outline-offset: -3px; }
+.card a:hover .cta { background: var(--berry); }
+.card a:focus-visible { outline: 3px solid var(--gold); outline-offset: -3px; }
 
 footer {
-  border-top: 1px solid var(--line);
+  background: var(--cream);
+  border-top: 2px solid var(--gold);
   color: var(--muted);
   font-size: 0.75rem;
   text-align: center;
   padding: 24px 16px 40px;
+  margin-top: 24px;
 }
 footer p { margin: 4px 0; }
 
 @media (prefers-reduced-motion: reduce) {
-  .card, .card:hover { transition: none; transform: none; }
+  .ticker .track { animation: none; }
+  .card, .card:hover, .catnav a, .catnav a:hover { transition: none; transform: none; }
 }
