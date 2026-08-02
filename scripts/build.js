@@ -19,10 +19,15 @@ const stars = (avg) => {
   return "★".repeat(n) + "☆".repeat(5 - n);
 };
 
-const card = (it) => `
+// rank: 0始まり。0〜2は売れ筋TOP3バッジ付き
+const card = (it, rank) => `
 <article class="card">
   <a href="${esc(it.url)}" rel="sponsored noopener" target="_blank">
-    <div class="thumb"><img src="${esc(it.image)}" alt="" loading="lazy" width="300" height="300"></div>
+    <div class="thumb">
+      ${rank < 3 ? `<span class="rank r${rank + 1}">${rank + 1}<i>位</i></span>` : ""}
+      <span class="tag">¥1,000</span>
+      <img src="${esc(it.image)}" alt="" loading="lazy" width="300" height="300">
+    </div>
     <h3 class="name">${esc(it.name)}</h3>
     <p class="shop">${esc(it.shop)}</p>
     <p class="review"><span class="stars">${stars(it.reviewAverage)}</span> <span class="rc">${it.reviewCount.toLocaleString()}件</span>${
@@ -37,7 +42,12 @@ const marathonBanner = () => {
   const end = new Date(marathonEnd);
   if (end < new Date()) return "";
   const d = end.toLocaleString("ja-JP", { timeZone: "Asia/Tokyo", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
-  return `<div class="marathon">お買い物マラソン開催中！ ${d} まで — 1,000円ポッキリで買い回り店舗数を稼ごう</div>`;
+  return `<div class="marathon">🏃 お買い物マラソン開催中！ ${d} まで — 1,000円ポッキリで買い回り店舗数を稼ごう</div>`;
+};
+
+const ticker = () => {
+  const t = "全品 ¥1,000ポッキリ ✦ 送料無料 ✦ 買い回りの店舗数稼ぎに ✦ 毎日自動更新 ✦ ";
+  return `<div class="ticker" aria-hidden="true"><div class="track"><span>${t.repeat(3)}</span><span>${t.repeat(3)}</span></div></div>`;
 };
 
 const nav = (active) => `
@@ -59,15 +69,26 @@ const page = ({ title, desc, active, body, path }) => `<!doctype html>
 <link rel="canonical" href="${site.url}/${path}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 ${marathonBanner()}
+${ticker()}
 <header class="hero">
   <p class="brand">${esc(site.title)}</p>
-  <div class="coin" aria-hidden="true"><span class="yen">¥</span>1,000</div>
-  <h1>ぜんぶ<em>1,000円ポッキリ</em>、送料無料。</h1>
+  <div class="note" aria-hidden="true">
+    <svg viewBox="0 0 360 168" xmlns="http://www.w3.org/2000/svg" role="img">
+      <rect x="3" y="3" width="354" height="162" rx="10" class="n-paper"/>
+      <rect x="14" y="14" width="332" height="140" rx="6" class="n-frame"/>
+      <circle cx="180" cy="84" r="58" class="n-guill"/>
+      <circle cx="180" cy="84" r="46" class="n-guill"/>
+      <text x="180" y="46" text-anchor="middle" class="n-issuer">ポッキリ市場券</text>
+      <text x="180" y="102" text-anchor="middle" class="n-big"><tspan class="n-yen">¥</tspan>1,000</text>
+      <text x="180" y="132" text-anchor="middle" class="n-sub">ぽっきり・送料無料</text>
+    </svg>
+  </div>
+  <h1>ぜんぶ<em>1,000円ポッキリ</em>。<br>ぜんぶ送料無料。</h1>
   <p class="sub">楽天市場から毎日自動更新 — 最終更新 ${updated}</p>
 </header>
 ${nav(active)}
@@ -93,7 +114,7 @@ const topBody = categories
     return `
 <section>
   <div class="sechead">
-    <h2>${c.name}</h2>
+    <h2>${c.name}<span class="badge">売れ筋順</span></h2>
     <a class="more" href="./${c.slug}.html">すべて見る →</a>
   </div>
   <div class="grid">${items.map(card).join("")}</div>
@@ -117,7 +138,7 @@ for (const c of categories) {
   const items = data.categories[c.slug] ?? [];
   const body = `
 <section>
-  <div class="sechead"><h2>${c.name} <span class="count">${items.length}件</span></h2></div>
+  <div class="sechead"><h2>${c.name}<span class="badge">売れ筋順・${items.length}件</span></h2></div>
   <div class="grid">${items.map(card).join("")}</div>
 </section>`;
   await writeFile(
