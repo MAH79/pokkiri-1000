@@ -176,6 +176,16 @@ main { max-width: 1080px; margin: 0 auto; padding: 8px 16px 48px; }
   white-space: nowrap;
 }
 
+/* 紹介文 */
+.intro {
+  font-size: 0.86rem;
+  color: var(--muted);
+  line-height: 1.9;
+  margin: 0 0 16px;
+  max-width: 720px;
+}
+.intro.lead { margin: 22px auto 0; text-align: left; }
+
 /* カードグリッド */
 .grid {
   display: grid;
