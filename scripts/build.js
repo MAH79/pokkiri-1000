@@ -67,6 +67,13 @@ const page = ({ title, desc, active, body, path, lead }) => `<!doctype html>
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${site.url}/${path}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="${esc(site.title)}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(desc)}">
+<meta property="og:url" content="${site.url}/${path}">
+<meta property="og:image" content="${site.url}/ogp.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap" rel="stylesheet">
@@ -106,6 +113,11 @@ ${body}
 
 await mkdir("dist", { recursive: true });
 await cp("src/style.css", "dist/style.css");
+try {
+  await cp("ogp.png", "dist/ogp.png");
+} catch {
+  console.warn("ogp.png がリポジトリ直下に見つかりません(OGP画像なしで続行)");
+}
 
 // ---- トップページ:各カテゴリの上位N件 ----
 const topBody = categories
