@@ -31,7 +31,7 @@ const CONFIG = {
   logFile: 'data/x-post-log.json',
 
   // true にすると実際には投稿せず、内容をログ出力するだけ
-   dryRun: true,
+  dryRun: process.env.DRY_RUN === '1',
 };
 
 /* ============================================================
