@@ -62,13 +62,31 @@ const readJson = (file, fallback) => {
  */
 function pickProduct() {
   const data = readJson(CONFIG.productFile, null);
-  const list = Array.isArray(data) ? data : data?.items;
-  if (!Array.isArray(list) || list.length === 0) return null;
-  const item = list[Math.floor(Math.random() * list.length)];
-  const name = item.name || item.title || item.itemName;
-  if (!name) return null;
-  // 商品名が長いので短く整える
-  return name.length > 28 ? name.slice(0, 28) + '…' : name;
+  const groups = data?.categories;
+  if (!groups) return null;
+
+  // 全カテゴリを1つにまとめる
+  const all = Object.values(groups).flat();
+  if (all.length === 0) return null;
+
+  // レビュー数の多い上位30件からランダムに選ぶ
+  const pool = all
+    .filter((i) => i.name)
+    .sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0))
+    .slice(0, 30);
+  if (pool.length === 0) return null;
+
+  const raw = pool[Math.floor(Math.random() * pool.length)].name;
+
+  // 【送料無料】などの装飾を削って読みやすくする
+  const clean = raw
+    .replace(/[【［〔《][^】］〕》]*[】］〕》]/g, '')
+    .replace(/送料無料|ポイント\d+倍|メール便|あす楽|1000円ポッキリ|ポッキリ/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (!clean) return null;
+  return clean.length > 24 ? clean.slice(0, 24) + '…' : clean;
 }
 
 /* ============================================================
