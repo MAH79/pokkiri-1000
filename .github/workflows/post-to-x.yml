@@ -1,0 +1,38 @@
+name: X auto post
+
+on:
+  schedule:
+    - cron: '0 23 * * *'   # 08:00 JST（予告・5と0のつく日・最終日）
+    - cron: '5 11 * * *'   # 20:05 JST（セール開始告知）
+  workflow_dispatch:        # 手動実行ボタン（テスト用）
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: install
+        run: npm install twitter-api-v2
+
+      - name: post
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+        run: node scripts/post-to-x.mjs
+
+      - name: save log
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data/x-post-log.json || true
+          git diff --staged --quiet || git commit -m "X投稿ログ更新"
+          git push || true
