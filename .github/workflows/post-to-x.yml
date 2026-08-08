@@ -20,7 +20,12 @@ jobs:
 
       - name: install
         run: npm install twitter-api-v2
-
+      - name: fetch items
+        env:
+          RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
+          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
+          RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
+        run: node scripts/fetch.js
       - name: post
         env:
           X_API_KEY: ${{ secrets.X_API_KEY }}
