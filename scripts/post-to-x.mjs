@@ -25,7 +25,7 @@ const CONFIG = {
   saleFile: 'data/sales.json',
 
   // 商品データ（無ければ商品なしで投稿します）
-  productFile: 'data/products.json',
+  productFile: 'data/items.json',
 
   // 投稿履歴（同じネタの二重投稿を防ぐため）
   logFile: 'data/x-post-log.json',
