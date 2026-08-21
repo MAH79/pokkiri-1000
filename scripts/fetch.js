@@ -13,7 +13,7 @@ if (!APP_ID || !ACCESS_KEY || !AFF_ID) {
 
 // 新エンドポイント
 const ENDPOINT =
-  "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20220601";
+  "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260401";
 // アプリ登録時のApplication URL(Referer制限対策)
 const REFERER = "https://www.jaio-gadget.com/";
 
